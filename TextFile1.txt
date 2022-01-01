@@ -1,0 +1,45 @@
+화면 소개
+          
+     - HX 제어기에 연결하기
+     * 
+     * 1) HX 20 API
+     *  Hx20Api.Initialize(0);
+     *  Connect(CONNECT PORT, IP ADDRESS1, IP ADDRESS2, IP ADDRESS3, IP ADDRESS4, PORT);
+     *  (Hx20Api 경우 initialize한 다음에 connect를 해줘야함)
+     *  (CONNECT PORT 는 0임)
+     *  (Initialize 반환값은 INT형으로 1아묜 정상 연결, 그 외 오류)
+     *  (Connect 반환값은 BOOL형으로 TRUE면 연결 성공, FALSE면 연결 실패)
+     
+     * 2) HX API
+     * HXApi.HXInitialize(COMTYPE, IP ADDRESS1, IP ADDRESS2, IP ADDRESS3, IP ADDRESS4, PORT);
+     * (HXApi경우 initialize와 connect를 한꺼번에 실행함)
+     * (반환 값은 INT형으로 1이면 연결 성공, 그 외 연결 실패)
+      
+        
+      
+     - 연결 확인하기
+     * 
+     * 1) HX 20 API
+     * GetConnectState();
+     * (반환 값은 BOOL형으로 TRUE인 경우 정상 연결중. FALSE면 연결X)
+     * 
+     * * 2)HXApi
+     * HXApi.HXConnectState();
+     * (반환 값은 INT형으로 1이면 정상 연결중. 그 외 오류)
+       
+     
+      
+     - 알람 메시지 API
+     *
+     * 1) HX 20 API 
+     * GetAlarmCode(INT ARRAY);
+     * (INT ARRAY 는 ALARM CODE를 담을 변수)
+     
+     * 2) HXApi
+     * HXApi.HXGetString((int)HXMap.HX_STR_OPMSG, BYTE ARRAY);                    
+     * (BYTE ARRAY는 메시지를 담을 변수)
+
+     line 33 이후
+     // 2019-12-09
+     // 64비트에서는 디자이너폼에서 유저컨트롤이 제대로 로드 안 됨
+     // 코드에서 생성해야함
