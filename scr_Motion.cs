@@ -9,69 +9,15 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using HXApiCS;
 
-namespace HXApiTesterCS
-{
-    public partial class scr_Motion : UserControl
-    {
-        /*
 
-         * - 주요 기능 -
-         * 좌표 모니터링
-         * MODE 선택
-         * READY, RESET, CYCLE STOP, CYCLE START
-         * JOG 동작
-          
-          
-         - 비트 값 넣기
-         1) HX 20 API
-            * G맵에 값을 넣을 경우
-         * SetGB(ADDRESS, BIT , TRUE OR FALSE);
-         * (TRUE OR FALSE는 해당 비트 주소와 비트자리에 넣을 값)
-         * 
-            * X맵에 값을 넣을 경우
-         * SetXB(ADDRESS, BIT, TRUE OR FALSE);
-          
-          
-         2) HX API
-            * G맵에 값을 넣을 경우
-         * HXApi.HXSetBit(HXMap.HX_G, ADDRESS, BIT, TRUE OR FALSE);
-         * (TRUE OR FALSE는 해당 비트 주소와 비트자리에 넣을 값)
-         * 
-            * X맵에 값을 넣을 경우
-         * HXApi.HXSetBit(HXMap.HX_X, ADDRESS, BIT, TRUE OR FALSE);
-          
-          
-           
-         - Register값 가져오기
-         1) HX 20 API
-            * SV맵 값 가져오기
-         * GetSVF(ADDRESS);
-         * (반환 값은 DOUBLE형임)
-         
-          
-            * SN맵 값 가져오기       
-         * GetSNF(ADDRESS);
-         * (반환 값은 DOUBLE형임)
-         * 
-         2) HX API
-           * SV맵 값 가져오기 
-         * HXApi.HXGetRegister64 (HXMap.HX_SV, ADDRESS);
-         * (반환 값은 DOUBLE형임)
-         
-           * SN맵 값 가져오기 
-         * HXApi.HXGetRegister64(HXMap.HX_SN, ADDRESS);
-         * (반환 값은 DOUBLE형임)
-          
-         
-         */
-
+namespace HXApiTesterCS {
+    public partial class scr_Motion : UserControl {
         const int HX_API = 1;
         const int HX_20API = 0;
 
         int mConnType = -1;
 
         Hx20Api m_api_20;
-
 
         const int AUTO_ADDR = 1;
         const int AUTO_BIT = 0;        
@@ -103,8 +49,6 @@ namespace HXApiTesterCS
         const int STOP_ADDR = 201;
         const int STOT_BIT = 1;
 
-        
-
         const int JOG_XP_ADDR = 201;
         const int JOG_XP_BIT = 7;
 
@@ -123,48 +67,23 @@ namespace HXApiTesterCS
         const int JOG_ZM_ADDR = 201;
         const int JOG_ZM_BIT = 11;
 
-
-
-
-
-        public scr_Motion()
-        {
+        public scr_Motion() {
             InitializeComponent();
-
-
             initControls();
-
             this.VisibleChanged += visibleChanged;
-
         }
 
-
-        private void visibleChanged(object sender, EventArgs e)
-        {
-            if(this.Visible)
-            {
-                timer_motion.Start();
-            }
-            else
-            {
-                timer_motion.Stop();
-            }
+        private void visibleChanged(object sender, EventArgs e) {
+            if(this.Visible) { timer_motion.Start(); }
+            
+            else { timer_motion.Stop(); }
         }
 
+        public void setConnType(int type) { mConnType = type; }
 
-        public void setConnType(int type)
-        {
-            mConnType = type;
-        }
+        public void setApi_20(Hx20Api api) { m_api_20 = api; }
 
-
-        public void setApi_20(Hx20Api api)
-        {
-            m_api_20 = api;
-        }
-
-        private void initControls()
-        {
+        private void initControls() {
             btn_auto.MouseDown += auto_down;
             btn_auto.MouseUp += auto_up;
 
@@ -220,568 +139,330 @@ namespace HXApiTesterCS
             btn_jog_zm.MouseUp += jog_zm_up;
         }
 
-
-        private void auto_down(object sender, EventArgs e)
-        {
+        private void auto_down(object sender, EventArgs e) {
             if (mConnType < 0)
                 return;
 
-            if (mConnType == 0)
-            {
-                m_api_20.SetGB(AUTO_ADDR, AUTO_BIT, true);
-            }
-            else if (mConnType == 1)
-            {
-                HXApi.HXSetBit(HXMap.HX_G, AUTO_ADDR, AUTO_BIT, true);
-            }
+            if (mConnType == 0) { m_api_20.SetGB(AUTO_ADDR, AUTO_BIT, true); }
 
+            else if (mConnType == 1) { HXApi.HXSetBit(HXMap.HX_G, AUTO_ADDR, AUTO_BIT, true); }
         }
-        private void auto_up(object sender, EventArgs e)
-        {
+
+        private void auto_up(object sender, EventArgs e) {
             if (mConnType < 0)
                 return;
 
-            if (mConnType == 0)
-            {
-                m_api_20.SetGB(AUTO_ADDR, AUTO_BIT, false);
-            }
-            else if (mConnType == 1)
-            {
-                HXApi.HXSetBit(HXMap.HX_G, AUTO_ADDR, AUTO_BIT, false);
-            }
-
+            if (mConnType == 0) { m_api_20.SetGB(AUTO_ADDR, AUTO_BIT, false); }
+            
+            else if (mConnType == 1) { HXApi.HXSetBit(HXMap.HX_G, AUTO_ADDR, AUTO_BIT, false); }
         }
 
-        private void mpg_down(object sender, EventArgs e)
-        {
+        private void mpg_down(object sender, EventArgs e) {
             if (mConnType < 0)
                 return;
 
-            if (mConnType == 0)
-            {
-                m_api_20.SetGB(MPG_ADDR, MPG_BIT, true);
-            }
-            else if (mConnType == 1)
-            {
-                HXApi.HXSetBit(HXMap.HX_G, MPG_ADDR, MPG_BIT, true);
-
-            }
-
+            if (mConnType == 0) { m_api_20.SetGB(MPG_ADDR, MPG_BIT, true); }
+            
+            else if (mConnType == 1) { HXApi.HXSetBit(HXMap.HX_G, MPG_ADDR, MPG_BIT, true); }
         }
-        private void mpg_up(object sender, EventArgs e)
-        {
+
+        private void mpg_up(object sender, EventArgs e) {
             if (mConnType < 0)
                 return;
 
-            if (mConnType == 0)
-            {
-                m_api_20.SetGB(MPG_ADDR, MPG_BIT, false);
-            }
-            else if (mConnType == 1)
-            {
-                HXApi.HXSetBit(HXMap.HX_G, MPG_ADDR, MPG_BIT, false);
-            }
-
+            if (mConnType == 0) { m_api_20.SetGB(MPG_ADDR, MPG_BIT, false); }
+            
+            else if (mConnType == 1) { HXApi.HXSetBit(HXMap.HX_G, MPG_ADDR, MPG_BIT, false); }
         }
-        private void jog_down(object sender, EventArgs e)
-        {
+
+        private void jog_down(object sender, EventArgs e) {
             if (mConnType < 0)
                 return;
 
-            if (mConnType == 0)
-            {
-                m_api_20.SetGB(JOG_ADDR, JOG_BIT, true);
-            }
-            else if (mConnType == 1)
-            {
-                HXApi.HXSetBit(HXMap.HX_G, JOG_ADDR, 4, true);
-            }
-
+            if (mConnType == 0) { m_api_20.SetGB(JOG_ADDR, JOG_BIT, true); }
+            
+            else if (mConnType == 1) { HXApi.HXSetBit(HXMap.HX_G, JOG_ADDR, 4, true); }
         }
-        private void jog_up(object sender, EventArgs e)
-        {
+
+        private void jog_up(object sender, EventArgs e) {
             if (mConnType < 0)
                 return;
 
-            if (mConnType == 0)
-            {
-                m_api_20.SetGB(JOG_ADDR, JOG_BIT, false);
-            }
-            else if (mConnType == 1)
-            {
-                HXApi.HXSetBit(HXMap.HX_G, JOG_ADDR, JOG_BIT, false);
-            }
-
+            if (mConnType == 0) { m_api_20.SetGB(JOG_ADDR, JOG_BIT, false); }
+            
+            else if (mConnType == 1) { HXApi.HXSetBit(HXMap.HX_G, JOG_ADDR, JOG_BIT, false); }
         }
-        private void zrn_down(object sender, EventArgs e)
-        {
+
+        private void zrn_down(object sender, EventArgs e) {
             if (mConnType < 0)
                 return;
 
-            if (mConnType == 0)
-            {
-                m_api_20.SetGB(ZRN_ADDR, ZRN_BIT, true);
-            }
-            else if (mConnType == 1)
-            {
-                HXApi.HXSetBit(HXMap.HX_G, ZRN_ADDR, ZRN_BIT, true);
-            }
-
+            if (mConnType == 0) { m_api_20.SetGB(ZRN_ADDR, ZRN_BIT, true); }
+            
+            else if (mConnType == 1) { HXApi.HXSetBit(HXMap.HX_G, ZRN_ADDR, ZRN_BIT, true); }
         }
-        private void zrn_up(object sender, EventArgs e)
-        {
+
+        private void zrn_up(object sender, EventArgs e) {
             if (mConnType < 0)
                 return;
 
-            if (mConnType == 0)
-            {
-                m_api_20.SetGB(ZRN_ADDR, ZRN_BIT, false);
-            }
-            else if (mConnType == 1)
-            {
-                HXApi.HXSetBit(HXMap.HX_G, ZRN_ADDR, ZRN_BIT, false);
-            }
-
+            if (mConnType == 0) { m_api_20.SetGB(ZRN_ADDR, ZRN_BIT, false); }
+            
+            else if (mConnType == 1) { HXApi.HXSetBit(HXMap.HX_G, ZRN_ADDR, ZRN_BIT, false); }
         }
-        private void mdi_down(object sender, EventArgs e)
-        {
+
+        private void mdi_down(object sender, EventArgs e) {
             if (mConnType < 0)
                 return;
 
-            if (mConnType == 0)
-            {
-                m_api_20.SetGB(MDI_ADDR, MDI_BIT, true);
-            }
-            else if (mConnType == 1)
-            {
-                HXApi.HXSetBit(HXMap.HX_G, MDI_ADDR, MDI_BIT, true);
-            }
-
+            if (mConnType == 0) { m_api_20.SetGB(MDI_ADDR, MDI_BIT, true); }
+            
+            else if (mConnType == 1) { HXApi.HXSetBit(HXMap.HX_G, MDI_ADDR, MDI_BIT, true); }
         }
-        private void mdi_up(object sender, EventArgs e)
-        {
+
+        private void mdi_up(object sender, EventArgs e) {
             if (mConnType < 0)
                 return;
 
-            if (mConnType == 0)
-            {
-                m_api_20.SetGB(MDI_ADDR, MDI_BIT, false);
-            }
-            else if (mConnType == 1)
-            {
-                HXApi.HXSetBit(HXMap.HX_G, MDI_ADDR, MDI_BIT, false);
-            }
-
-
+            if (mConnType == 0) { m_api_20.SetGB(MDI_ADDR, MDI_BIT, false); }
+            
+            else if (mConnType == 1) { HXApi.HXSetBit(HXMap.HX_G, MDI_ADDR, MDI_BIT, false); }
         }
-        private void edit_down(object sender, EventArgs e)
-        {
+
+        private void edit_down(object sender, EventArgs e) {
             if (mConnType < 0)
                 return;
 
-            if (mConnType == 0)
-            {
-                m_api_20.SetGB(EDIT_ADDR, EDIT_BIT, true);
-            }
-            else if (mConnType == 1)
-            {
-                HXApi.HXSetBit(HXMap.HX_G, EDIT_ADDR, EDIT_BIT, true);
-
-            }
-
+            if (mConnType == 0) { m_api_20.SetGB(EDIT_ADDR, EDIT_BIT, true); }
+            
+            else if (mConnType == 1) { HXApi.HXSetBit(HXMap.HX_G, EDIT_ADDR, EDIT_BIT, true); }
         }
-        private void edit_up(object sender, EventArgs e)
-        {
+
+        private void edit_up(object sender, EventArgs e) {
             if (mConnType < 0)
                 return;
 
-            if (mConnType == 0)
-            {
-                m_api_20.SetGB(EDIT_ADDR, EDIT_BIT, false);
-
-            }
-            else if (mConnType == 1)
-            {
-                HXApi.HXSetBit(HXMap.HX_G, EDIT_ADDR, EDIT_BIT, false);
-
-            }
-
+            if (mConnType == 0) { m_api_20.SetGB(EDIT_ADDR, EDIT_BIT, false); }
+            
+            else if (mConnType == 1) { HXApi.HXSetBit(HXMap.HX_G, EDIT_ADDR, EDIT_BIT, false); }
         }
-        private void ready_down(object sender, EventArgs e)
-        {
+
+        private void ready_down(object sender, EventArgs e) {
             if (mConnType < 0)
                 return;
 
-            if (mConnType == 0)
-            {
-                m_api_20.SetXB(READY_ADDR, READY_BIT, true);
-            }
-            else if (mConnType == 1)
-            {
-                HXApi.HXSetBit(HXMap.HX_X, READY_ADDR, READY_BIT, true);
-            }
-
+            if (mConnType == 0) { m_api_20.SetXB(READY_ADDR, READY_BIT, true); }
+            
+            else if (mConnType == 1) { HXApi.HXSetBit(HXMap.HX_X, READY_ADDR, READY_BIT, true); }
         }
-        private void ready_up(object sender, EventArgs e)
-        {
+
+        private void ready_up(object sender, EventArgs e) {
             if (mConnType < 0)
                 return;
 
-            if (mConnType == 0)
-            {
-                m_api_20.SetXB(READY_ADDR, READY_BIT, false);
-
-            }
-            else if (mConnType == 1)
-            {
-                HXApi.HXSetBit(HXMap.HX_X, READY_ADDR, READY_BIT, false);
-
-            }
-
+            if (mConnType == 0) { m_api_20.SetXB(READY_ADDR, READY_BIT, false); }
+            
+            else if (mConnType == 1) { HXApi.HXSetBit(HXMap.HX_X, READY_ADDR, READY_BIT, false); }
         }
-        private void reset_down(object sender, EventArgs e)
-        {
+
+        private void reset_down(object sender, EventArgs e) {
             if (mConnType < 0)
                 return;
 
-            if (mConnType == 0)
-            {
-                m_api_20.SetXB(RESET_ADDR, RESET_BIT, true);
-            }
-            else if (mConnType == 1)
-            {
-                HXApi.HXSetBit(HXMap.HX_X, RESET_ADDR, RESET_BIT, true);
-
-            }
-
-
+            if (mConnType == 0) { m_api_20.SetXB(RESET_ADDR, RESET_BIT, true); }
+            
+            else if (mConnType == 1) { HXApi.HXSetBit(HXMap.HX_X, RESET_ADDR, RESET_BIT, true); }
         }
-        private void reset_up(object sender, EventArgs e)
-        {
+
+        private void reset_up(object sender, EventArgs e) {
             if (mConnType < 0)
                 return;
 
-            if (mConnType == 0)
-            {
-                m_api_20.SetXB(RESET_ADDR, RESET_BIT, false);
-            }
-            else if (mConnType == 1)
-            {
-                HXApi.HXSetBit(HXMap.HX_X, RESET_ADDR, RESET_BIT, false);
-            }
+            if (mConnType == 0) { m_api_20.SetXB(RESET_ADDR, RESET_BIT, false); }
 
+            else if (mConnType == 1) { HXApi.HXSetBit(HXMap.HX_X, RESET_ADDR, RESET_BIT, false); }
         }
-        private void start_down(object sender, EventArgs e)
-        {
+
+        private void start_down(object sender, EventArgs e) {
             if (mConnType < 0)
                 return;
 
-            if (mConnType == 0)
-            {
-                m_api_20.SetXB(START_ADDR, START_BIT, true);
-            }
-            else if (mConnType == 1)
-            {
-                HXApi.HXSetBit(HXMap.HX_X, START_ADDR, START_BIT, true);
-            }
-
+            if (mConnType == 0) { m_api_20.SetXB(START_ADDR, START_BIT, true); }
+        
+            else if (mConnType == 1) { HXApi.HXSetBit(HXMap.HX_X, START_ADDR, START_BIT, true); }
         }
-        private void start_up(object sender, EventArgs e)
-        {
+
+        private void start_up(object sender, EventArgs e) {
             if (mConnType < 0)
                 return;
 
-            if (mConnType == 0)
-            {
-                m_api_20.SetXB(START_ADDR, START_BIT, false);
-            }
-            else if (mConnType == 1)
-            {
-                HXApi.HXSetBit(HXMap.HX_X, START_ADDR, START_BIT, false);
-            }
-
+            if (mConnType == 0) { m_api_20.SetXB(START_ADDR, START_BIT, false); }
+            
+            else if (mConnType == 1) { HXApi.HXSetBit(HXMap.HX_X, START_ADDR, START_BIT, false); }
         }
-        private void stop_down(object sender, EventArgs e)
-        {
+
+        private void stop_down(object sender, EventArgs e) {
             if (mConnType < 0)
                 return;
 
-            if (mConnType == 0)
-            {
-                m_api_20.SetXB(STOP_ADDR, STOT_BIT, true);
-            }
-            else if (mConnType == 1)
-            {
-                HXApi.HXSetBit(HXMap.HX_X, STOP_ADDR, STOT_BIT, true);
-
-            }
-
+            if (mConnType == 0) { m_api_20.SetXB(STOP_ADDR, STOT_BIT, true); }
+            else if (mConnType == 1) { HXApi.HXSetBit(HXMap.HX_X, STOP_ADDR, STOT_BIT, true); }
         }
-        private void stop_up(object sender, EventArgs e)
-        {
+
+        private void stop_up(object sender, EventArgs e) {
             if (mConnType < 0)
                 return;
 
-            if (mConnType == 0)
-            {
-                m_api_20.SetXB(STOP_ADDR, STOT_BIT, false);
-            }
-            else if (mConnType == 1)
-            {
-                HXApi.HXSetBit(HXMap.HX_X, STOP_ADDR, STOT_BIT, false);
-            }
+            if (mConnType == 0) { m_api_20.SetXB(STOP_ADDR, STOT_BIT, false); }
 
+            else if (mConnType == 1) { HXApi.HXSetBit(HXMap.HX_X, STOP_ADDR, STOT_BIT, false); }
         }
 
-        private void jog_xp_down(object sender, EventArgs e)
-        {
+        private void jog_xp_down(object sender, EventArgs e) {
             if (mConnType < 0)
                 return;
 
-            if (mConnType == 0)
-            {
-                m_api_20.SetXB(JOG_XP_ADDR, JOG_XP_BIT, true);
-            }
-            else if (mConnType == 1)
-            {
-                HXApi.HXSetBit(HXMap.HX_X, JOG_XP_ADDR, JOG_XP_BIT, true);
-            }
-
+            if (mConnType == 0) { m_api_20.SetXB(JOG_XP_ADDR, JOG_XP_BIT, true); }
+            
+            else if (mConnType == 1) { HXApi.HXSetBit(HXMap.HX_X, JOG_XP_ADDR, JOG_XP_BIT, true); }
         }
-        private void jog_xp_up(object sender, EventArgs e)
-        {
+
+        private void jog_xp_up(object sender, EventArgs e) {
             if (mConnType < 0)
                 return;
 
-            if (mConnType == 0)
-            {
-                m_api_20.SetXB(JOG_XP_ADDR, JOG_XP_BIT, false);
-            }
-            else if (mConnType == 1)
-            {
-                HXApi.HXSetBit(HXMap.HX_X, JOG_XP_ADDR, JOG_XP_BIT, false);
-            }
-
-
+            if (mConnType == 0) { m_api_20.SetXB(JOG_XP_ADDR, JOG_XP_BIT, false); }
+            
+            else if (mConnType == 1) { HXApi.HXSetBit(HXMap.HX_X, JOG_XP_ADDR, JOG_XP_BIT, false); }
         }
 
-        private void jog_xm_down(object sender, EventArgs e)
-        {
+        private void jog_xm_down(object sender, EventArgs e) {
             if (mConnType < 0)
                 return;
 
-            if (mConnType == 0)
-            {
-                m_api_20.SetXB(JOG_XM_ADDR, JOG_XM_BIT, true);
-            }
-            else if (mConnType == 1)
-            {
-                HXApi.HXSetBit(HXMap.HX_X, JOG_XM_ADDR, JOG_XM_BIT, true);
-
-            }
-
+            if (mConnType == 0) { m_api_20.SetXB(JOG_XM_ADDR, JOG_XM_BIT, true); }
+            
+            else if (mConnType == 1) { HXApi.HXSetBit(HXMap.HX_X, JOG_XM_ADDR, JOG_XM_BIT, true); }
         }
-        private void jog_xm_up(object sender, EventArgs e)
-        {
+
+        private void jog_xm_up(object sender, EventArgs e) {
             if (mConnType < 0)
                 return;
 
-            if (mConnType == 0)
-            {
-                m_api_20.SetXB(JOG_XM_ADDR, JOG_XM_BIT, false);
-            }
-            else if (mConnType == 1)
-            {
-                HXApi.HXSetBit(HXMap.HX_X, JOG_XM_ADDR, JOG_XM_BIT, false);
-            }
-
+            if (mConnType == 0) { m_api_20.SetXB(JOG_XM_ADDR, JOG_XM_BIT, false); }
+        
+            else if (mConnType == 1) { HXApi.HXSetBit(HXMap.HX_X, JOG_XM_ADDR, JOG_XM_BIT, false); }
         }
-        private void jog_yp_down(object sender, EventArgs e)
-        {
+
+        private void jog_yp_down(object sender, EventArgs e) {
             if (mConnType < 0)
                 return;
 
-            if (mConnType == 0)
-            {
-                m_api_20.SetXB(JOG_YP_ADDR, JOG_YP_BIT, true);
-            }
-            else if (mConnType == 1)
-            {
-                HXApi.HXSetBit(HXMap.HX_X, JOG_YP_ADDR, JOG_YP_BIT, true);
-            }
-
+            if (mConnType == 0) { m_api_20.SetXB(JOG_YP_ADDR, JOG_YP_BIT, true); }
+            
+            else if (mConnType == 1) { HXApi.HXSetBit(HXMap.HX_X, JOG_YP_ADDR, JOG_YP_BIT, true); }
         }
-        private void jog_yp_up(object sender, EventArgs e)
-        {
+
+        private void jog_yp_up(object sender, EventArgs e) {
             if (mConnType < 0)
                 return;
 
-            if (mConnType == 0)
-            {
-                m_api_20.SetXB(JOG_YP_ADDR, JOG_YP_BIT, false);
-            }
-            else if (mConnType == 1)
-            {
-                HXApi.HXSetBit(HXMap.HX_X, JOG_YP_ADDR, JOG_YP_BIT, false);
-            }
-
+            if (mConnType == 0) { m_api_20.SetXB(JOG_YP_ADDR, JOG_YP_BIT, false); }
+            
+            else if (mConnType == 1) { HXApi.HXSetBit(HXMap.HX_X, JOG_YP_ADDR, JOG_YP_BIT, false); }
         }
-        private void jog_ym_down(object sender, EventArgs e)
-        {
+
+        private void jog_ym_down(object sender, EventArgs e) {
             if (mConnType < 0)
                 return;
 
-            if (mConnType == 0)
-            {
-                m_api_20.SetXB(JOG_YM_ADDR, JOG_YM_BIT, true);
-            }
-            else if (mConnType == 1)
-            {
-                HXApi.HXSetBit(HXMap.HX_X, JOG_YM_ADDR, JOG_YM_BIT, true);
-            }
-
+            if (mConnType == 0) { m_api_20.SetXB(JOG_YM_ADDR, JOG_YM_BIT, true); }
+            
+            else if (mConnType == 1) { HXApi.HXSetBit(HXMap.HX_X, JOG_YM_ADDR, JOG_YM_BIT, true); }
         }
-        private void jog_ym_up(object sender, EventArgs e)
-        {
+
+        private void jog_ym_up(object sender, EventArgs e) {
             if (mConnType < 0)
                 return;
 
-            if (mConnType == 0)
-            {
-                m_api_20.SetXB(JOG_YM_ADDR, JOG_YM_BIT, false);
-            }
-            else if (mConnType == 1)
-            {
-                HXApi.HXSetBit(HXMap.HX_X, JOG_YM_ADDR, JOG_YM_BIT, false);
-            }
-
-
+            if (mConnType == 0) { m_api_20.SetXB(JOG_YM_ADDR, JOG_YM_BIT, false); }
+            
+            else if (mConnType == 1) { HXApi.HXSetBit(HXMap.HX_X, JOG_YM_ADDR, JOG_YM_BIT, false); }
         }
 
-        private void jog_zp_down(object sender, EventArgs e)
-        {
+        private void jog_zp_down(object sender, EventArgs e) {
             if (mConnType < 0)
                 return;
 
-            if (mConnType == 0)
-            {
-                m_api_20.SetXB(JOG_ZP_ADDR, JOG_ZP_BIT, true);
-            }
-            else if (mConnType == 1)
-            {
-                HXApi.HXSetBit(HXMap.HX_X, JOG_ZP_ADDR, JOG_ZP_BIT, true);
+            if (mConnType == 0) { m_api_20.SetXB(JOG_ZP_ADDR, JOG_ZP_BIT, true); }
 
-            }
-
-        }
-        private void jog_zp_up(object sender, EventArgs e)
-        {
-            if (mConnType < 0)
-                return;
-            if (mConnType == 0)
-            {
-                m_api_20.SetXB(JOG_ZP_ADDR, JOG_ZP_BIT, false);
-            }
-            else if (mConnType == 1)
-            {
-                HXApi.HXSetBit(HXMap.HX_X, JOG_ZP_ADDR, JOG_ZP_BIT, false);
-            }
-
+            else if (mConnType == 1) { HXApi.HXSetBit(HXMap.HX_X, JOG_ZP_ADDR, JOG_ZP_BIT, true); }
         }
 
-        private void jog_zm_down(object sender, EventArgs e)
-        {
+        private void jog_zp_up(object sender, EventArgs e) {
             if (mConnType < 0)
                 return;
 
-            if (mConnType == 0)
-            {
-                m_api_20.SetXB(JOG_ZM_ADDR, JOG_ZM_BIT, true);
-            }
-            else if (mConnType == 1)
-            {
-                HXApi.HXSetBit(HXMap.HX_X, JOG_ZM_ADDR, JOG_ZM_BIT, true);
-            }
+            if (mConnType == 0) { m_api_20.SetXB(JOG_ZP_ADDR, JOG_ZP_BIT, false); }
 
+            else if (mConnType == 1) { HXApi.HXSetBit(HXMap.HX_X, JOG_ZP_ADDR, JOG_ZP_BIT, false); }
         }
-        private void jog_zm_up(object sender, EventArgs e)
-        {
+
+        private void jog_zm_down(object sender, EventArgs e) {
             if (mConnType < 0)
                 return;
 
-            if (mConnType == 0)
-            {
-                m_api_20.SetXB(JOG_ZM_ADDR, JOG_ZM_BIT, false);
-            }
-            else if (mConnType == 1)
-            {
-                HXApi.HXSetBit(HXMap.HX_X, JOG_ZM_ADDR, JOG_ZM_BIT, false);
-
-            }
-
+            if (mConnType == 0) { m_api_20.SetXB(JOG_ZM_ADDR, JOG_ZM_BIT, true); }
+            
+            else if (mConnType == 1) { HXApi.HXSetBit(HXMap.HX_X, JOG_ZM_ADDR, JOG_ZM_BIT, true); }
         }
 
-        private void jog_ap_down(object sender, EventArgs e)
-        {
+        private void jog_zm_up(object sender, EventArgs e) {
             if (mConnType < 0)
                 return;
 
-            if (mConnType == 0)
-            {
-            }
-            else if (mConnType == 1)
-            {
+            if (mConnType == 0) { m_api_20.SetXB(JOG_ZM_ADDR, JOG_ZM_BIT, false); }
 
-            }
-
+            else if (mConnType == 1) { HXApi.HXSetBit(HXMap.HX_X, JOG_ZM_ADDR, JOG_ZM_BIT, false); }
         }
-        private void jog_ap_up(object sender, EventArgs e)
-        {
+
+        private void jog_ap_down(object sender, EventArgs e) {
             if (mConnType < 0)
                 return;
 
-            if (mConnType == 0)
-            {
-
-            }
-            else if (mConnType == 1)
-            {
-
-            }
-
+            if (mConnType == 0) { }
+            
+            else if (mConnType == 1) { }
         }
-        private void jog_am_down(object sender, EventArgs e)
-        {
+
+        private void jog_ap_up(object sender, EventArgs e) {
             if (mConnType < 0)
                 return;
 
-            if (mConnType == 0)
-            {
-            }
-            else if (mConnType == 1)
-            {
-
-            }
-
+            if (mConnType == 0) { }
+            
+            else if (mConnType == 1) { }
         }
-        private void jog_am_up(object sender, EventArgs e)
-        {
+
+        private void jog_am_down(object sender, EventArgs e) {
             if (mConnType < 0)
                 return;
 
-            if (mConnType == 0)
-            {
-
-            }
-            else if (mConnType == 1)
-            {
-
-            }
-
+            if (mConnType == 0) { }
+            
+            else if (mConnType == 1) { }
         }
 
-        private void timer_motion_Tick(object sender, EventArgs e)
-        {
+        private void jog_am_up(object sender, EventArgs e) {
+            if (mConnType < 0)
+                return;
+
+            if (mConnType == 0) { }
+            
+            else if (mConnType == 1) { }
+        }
+
+        private void timer_motion_Tick(object sender, EventArgs e) {
             // 현재 위치
             // sv 83
             double curpos1 = 0;
@@ -814,9 +495,7 @@ namespace HXApiTesterCS
             double dispos4 = 0;
             double dispos5 = 0;
 
-            if (mConnType == 0)
-            {
-
+            if (mConnType == 0) {
                 // 현재 위치
                 // sv 83
                 curpos1 = m_api_20.GetSVF(83);
@@ -824,7 +503,6 @@ namespace HXApiTesterCS
                 curpos3 = m_api_20.GetSVF(85);
                 curpos4 = m_api_20.GetSVF(86);
                 curpos5 = m_api_20.GetSVF(87);
-
 
                 // 기계 위치 
                 //sn 237
@@ -834,7 +512,6 @@ namespace HXApiTesterCS
                 macpos4 = m_api_20.GetSNF(240);
                 macpos5 = m_api_20.GetSNF(241);
 
-
                 // 상대위치
                 // sn 269?
                 relpos1 = m_api_20.GetSNF(269);
@@ -843,7 +520,6 @@ namespace HXApiTesterCS
                 relpos4 = m_api_20.GetSNF(272);
                 relpos5 = m_api_20.GetSNF(273);
 
-
                 // 남은거리
                 // sv 247
                 dispos1 = m_api_20.GetSVF(247);
@@ -851,20 +527,15 @@ namespace HXApiTesterCS
                 dispos3 = m_api_20.GetSVF(249);
                 dispos4 = m_api_20.GetSVF(250);
                 dispos5 = m_api_20.GetSVF(251);
-
-
-
             }
-            else if (mConnType == 1)
-            {
 
+            else if (mConnType == 1) {
                 // sv 83
                 curpos1 = HXApi.HXGetRegister64 (HXMap.HX_SV, 83);
                 curpos2 = HXApi.HXGetRegister64(HXMap.HX_SV, 84);
                 curpos3 = HXApi.HXGetRegister64(HXMap.HX_SV, 85);
                 curpos4 = HXApi.HXGetRegister64(HXMap.HX_SV, 86);
                 curpos5 = HXApi.HXGetRegister64(HXMap.HX_SV, 87);
-
 
                 // 기계 위치 
                 //sn 237
@@ -874,7 +545,6 @@ namespace HXApiTesterCS
                 macpos4 = HXApi.HXGetRegister64(HXMap.HX_SN, 240);
                 macpos5 = HXApi.HXGetRegister64(HXMap.HX_SN, 241);
 
-
                 // 상대위치
                 // sn 269?
                 relpos1 = HXApi.HXGetRegister64(HXMap.HX_SN, 269);
@@ -883,7 +553,6 @@ namespace HXApiTesterCS
                 relpos4 = HXApi.HXGetRegister64(HXMap.HX_SN, 272);
                 relpos5 = HXApi.HXGetRegister64(HXMap.HX_SN, 273);
 
-
                 // 남은거리
                 // sv 247
                 dispos1 = HXApi.HXGetRegister64(HXMap.HX_SV, 247);
@@ -891,7 +560,6 @@ namespace HXApiTesterCS
                 dispos3 = HXApi.HXGetRegister64(HXMap.HX_SV, 249);
                 dispos4 = HXApi.HXGetRegister64(HXMap.HX_SV, 250);
                 dispos5 = HXApi.HXGetRegister64(HXMap.HX_SV, 251);
-
             }
 
             setDataText(lb_curpos_1, curpos1);
@@ -899,7 +567,6 @@ namespace HXApiTesterCS
             setDataText(lb_curpos_3, curpos3);
             setDataText(lb_curpos_4, curpos4);
             setDataText(lb_curpos_5, curpos5);
-
 
             setDataText(lb_macpos_1, macpos1);
             setDataText(lb_macpos_2, macpos2);
@@ -918,19 +585,15 @@ namespace HXApiTesterCS
             setDataText(lb_dispos_3, dispos3);
             setDataText(lb_dispos_4, dispos4);
             setDataText(lb_dispos_5, dispos5);
-
         }
 
-
-        private void setDataText(Label lb, double value)
-        {
+        private void setDataText(Label lb, double value) {
             string str = value.ToString("F3");
 
             if (lb.Text == str)
                 return;
 
             lb.Text = str;
-
         }
     }
 }

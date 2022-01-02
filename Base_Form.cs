@@ -15,16 +15,15 @@ namespace HXApiTesterCS {
 
         // Screen 
         enum enScreen {
-            BTN_MOTION,
+            BTN_MOTION, 
             BTN_IO,
             BTN_NCLIST,
             BTN_64BIT_TEST,
-            TOTAL
+            TOTAL 
         }
 
         // kind of connection API
         enum enConnType {
-
             DISCONNECT = -1,
             HX_20_API = 0,
             HX_API, 
@@ -41,7 +40,8 @@ namespace HXApiTesterCS {
         enConnType mConnType;
         bool mIsConn = false;
 
-        Hx20Api m_api_20;
+        Hx20Api m_api_20; 
+
 
         public Base_Form() {
             InitializeComponent();

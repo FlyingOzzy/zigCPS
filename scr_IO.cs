@@ -10,135 +10,50 @@ using System.Windows.Forms;
 using HXApiCS;
 
 
-
-namespace HXApiTesterCS
-{
-    public partial class scr_IO : UserControl
-    {
-        /*
-
-         * - 주요 기능 -
-         * 비트 모니터링 및 값 저장하기
-         * 
-         * 
-         - 비트 값 넣기
-         1) HX 20 API
-            * X맵에 값을 넣을 경우
-         * SetBit(HxMap.HX_X, ADDRESS, BIT, TRUE OR FALSE);    
-         * (TRUE OR FALSE는 해당 비트 주소와 비트자리에 넣을 값)
-          
-            * Y맵에 값을 넣을 경우
-         * SetBit(HxMap.HX_Y, ADDRESS, BIT, TRUE OR FALSE);     
-          
-          
-          
-         2) HX API
-            * X맵에 값을 넣을 경우
-         * HXApi.HXSetBit(HXMap.HX_X, ADDRESS, BIT, TRUE OR FALSE); 
-         * (TRUE OR FALSE는 해당 비트 주소와 비트자리에 넣을 값)
-          
-            * Y맵에 값을 넣을 경우
-         * HXApi.HXSetBit(HXMap.HX_Y, ADDRESS, BIT, TRUE OF FALSE); 
-          
-          
-        
-                    
-          - 비트 값 가져오기
-         1) HX 20 API
-            * X맵에 값 가져오기   
-         * GetBit(HxMap.HX_X, ADDRESS, BIT);
-         * (반환값은 BOOL형임)
-          
-            * Y맵에 값 가져오기
-         * GetBit(HxMap.HX_Y, ADDRESS, BIT);
-         * (반환값은 BOOL형임)
-          
-         
-          
-          
-         2) HX API
-            * X맵에 값 가져오기
-         * HXApi.HXGetBit(HXMap.HX_X, ADDRESS, BIT); 
-         * (반환값은 BOOL형임)
-          
-            * Y맵에 값 가져오기
-         * HXApi.HXGetBit(HXMap.HX_Y, ADDRESS, BIT); 
-         * (반환값은 BOOL형임)
-          
-            
-         
-         
-         */
-
-
-
+namespace HXApiTesterCS {
+    public partial class scr_IO : UserControl {
         CheckBox[] m_buttons = new CheckBox[32];
 
         bool bMap_x = false;
-
         const int HX_API = 1;
         const int HX_20API = 0;
 
         int mConnType = -1;
-
-
         int mSelectedDevice = -1;
 
         Hx20Api m_api_20;
 
-        public scr_IO()
-        {
+        public scr_IO() {
             InitializeComponent();
-
             initControls();
-
             this.VisibleChanged += visibleChanged;
         }
-        private void visibleChanged(object sender, EventArgs e)
-        {
-            if(this.Visible)
-            {
-                io_timer.Start();
-            }
-            else
-            {
-                io_timer.Stop();
-            }
+
+        private void visibleChanged(object sender, EventArgs e) {
+            if(this.Visible) { io_timer.Start(); }
+            
+            else { io_timer.Stop(); }
         }
 
+        public void setConnType(int type) { mConnType = type; }
 
+        public void setApi_20(Hx20Api api) { m_api_20 = api; }
 
-        public void setConnType(int type)
-        {
-            mConnType = type;
-        }
-
-        public void setApi_20(Hx20Api api)
-        {
-            m_api_20 = api;
-        }
-
-
-        public void setMapName(string str)
-        {
+        public void setMapName(string str) {
             lb_mapname.Text = str;
    
- 
-            if (str.Contains("X"))
-            {
+            if (str.Contains("X")) {
                 lb_title.Text = "IO INPUT";
                 bMap_x = true;
             }
-            else
-            {
+            
+            else {
                 lb_title.Text = "IO OUTPUT";
                 bMap_x = false;
             }
-
         }
 
-        private void initControls()
-        {
+        private void initControls() {
             m_buttons[0] = checkBox1;
             m_buttons[1] = checkBox2;
             m_buttons[2] = checkBox3;
@@ -172,193 +87,112 @@ namespace HXApiTesterCS
             m_buttons[28] = checkBox29;
             m_buttons[29] = checkBox30;
             m_buttons[30] = checkBox31;
-
             m_buttons[31] = checkBox32;
 
-            for (int i = 0; i < m_buttons.Length; i++)
-            {
-                m_buttons[i].Click += buttonClick;
-            }
+            for (int i = 0; i < m_buttons.Length; i++) { m_buttons[i].Click += buttonClick; }
 
             cmb_device.SelectedIndex = 0;
         }
 
-
-
-        private void buttonClick(object sender, EventArgs e)
-        {
+        private void buttonClick(object sender, EventArgs e) {
             CheckBox clickBtn = (CheckBox)sender;
 
             int index = -1;
-            for (int i = 0; i < 32; i++)
-            {
-                if (m_buttons[i] == clickBtn)
-                {
+
+            for (int i = 0; i < 32; i++) {
+                if (m_buttons[i] == clickBtn) {
                     index = i;
                     break;
                 }
             }
 
-
             CheckState check = m_buttons[index].CheckState;
 
             // x 맵 연결
-            if (bMap_x)
-            {
-
-                if (mConnType == 0)
-                {
-                    if (check == CheckState.Checked)
-                    {
-                        m_api_20.SetBit(HxMap.HX_X, mSelectedDevice, index, true);
-                    }
-                    else if (check == CheckState.Unchecked)
-                    {
-                        m_api_20.SetBit(HxMap.HX_X, mSelectedDevice, index, false);
-                    }                   
+            if (bMap_x) {
+                if (mConnType == 0) {
+                    if (check == CheckState.Checked) { m_api_20.SetBit(HxMap.HX_X, mSelectedDevice, index, true); }
+                    
+                    else if (check == CheckState.Unchecked) { m_api_20.SetBit(HxMap.HX_X, mSelectedDevice, index, false); }                   
                 }
-                else if (mConnType == 1)
-                {
-                    if (check == CheckState.Checked)
-                    {
-                        HXApi.HXSetBit(HXMap.HX_X, mSelectedDevice, index, true);
-                    }
-                    else if (check == CheckState.Unchecked)
-                    {
-                        HXApi.HXSetBit(HXMap.HX_X, mSelectedDevice, index, false);
-                    }
 
+                else if (mConnType == 1) {
+                    if (check == CheckState.Checked) { HXApi.HXSetBit(HXMap.HX_X, mSelectedDevice, index, true); }
+
+                    else if (check == CheckState.Unchecked) { HXApi.HXSetBit(HXMap.HX_X, mSelectedDevice, index, false); }
                 }
             }
-
-
-
 
             // y 맵 연결
-            else
-            {
-                if (mConnType == 0)
-                {
-                    if (check == CheckState.Checked)
-                    {
-                        m_api_20.SetBit(HxMap.HX_Y, mSelectedDevice, index, true);
-                    }
-                    else if (check == CheckState.Unchecked)
-                    {
-                        m_api_20.SetBit(HxMap.HX_Y, mSelectedDevice, index, false);
-                    }
+            else {
+                if (mConnType == 0) {
+                    if (check == CheckState.Checked) { m_api_20.SetBit(HxMap.HX_Y, mSelectedDevice, index, true); }
+
+                    else if (check == CheckState.Unchecked) { m_api_20.SetBit(HxMap.HX_Y, mSelectedDevice, index, false); }
                 }
-                else if (mConnType == 1)
-                {
-                    if (check == CheckState.Checked)
-                    {
-                        HXApi.HXSetBit(HXMap.HX_Y, mSelectedDevice, index, true);
-                    }
-                    else if (check == CheckState.Unchecked)
-                    {
-                        HXApi.HXSetBit(HXMap.HX_Y, mSelectedDevice, index, false);
-                    }
+
+                else if (mConnType == 1) {
+                    if (check == CheckState.Checked) {
+                        HXApi.HXSetBit(HXMap.HX_Y, mSelectedDevice, index, true); }
+                    
+                    else if (check == CheckState.Unchecked) { HXApi.HXSetBit(HXMap.HX_Y, mSelectedDevice, index, false); }
                 }
             }
-
-
-
-
         }
 
-        private void io_timer_Tick(object sender, EventArgs e)
-        {
-            updateIOButtons();
-        }
-
-        private void updateIOButtons()
-        {
+        private void io_timer_Tick(object sender, EventArgs e) { updateIOButtons(); }
+        private void updateIOButtons() {
             if (mConnType < 0)
                 return;
             
-            if (bMap_x)
-            {
+            if (bMap_x) {
                 // x 맵 연결
-                if (mConnType == 0)
-                {
-                    for (int i = 0; i < 32; i++)
-                    {
+                if (mConnType == 0) {
+                    for (int i = 0; i < 32; i++) {
                         bool bval = m_api_20.GetBit(HxMap.HX_X, mSelectedDevice, i);
 
-                        if (bval)
-                        {
-                            m_buttons[i].CheckState = CheckState.Checked;
-                        }
-                        else
-                        {
-                            m_buttons[i].CheckState = CheckState.Unchecked;
-                        }
+                        if (bval) { m_buttons[i].CheckState = CheckState.Checked; }
+
+                        else { m_buttons[i].CheckState = CheckState.Unchecked; }
                     }
                 }
-                else if (mConnType == 1)
-                {
-                    for (int i = 0; i < 32; i++)
-                    {
 
+                else if (mConnType == 1) {
+                    for (int i = 0; i < 32; i++) {
                         bool bval = HXApi.HXGetBit(HXMap.HX_X, mSelectedDevice, i);
 
-                        if (bval)
-                        {
-                            m_buttons[i].CheckState = CheckState.Checked;
-                        }
-                        else
-                        {
-                            m_buttons[i].CheckState = CheckState.Unchecked;
-                        }
-                    }
+                        if (bval) {m_buttons[i].CheckState = CheckState.Checked; }
 
+                        else { m_buttons[i].CheckState = CheckState.Unchecked; }
+                    }
                 }
             }
-            else
-            {
+
+            else {
                 // y 맵 연결
-                if (mConnType == 0)
-                {
-                    for (int i = 0; i < 32; i++)
-                    {
+                if (mConnType == 0) {
+                    for (int i = 0; i < 32; i++) {
                         bool bval = m_api_20.GetBit(HxMap.HX_Y, mSelectedDevice, i);
 
-                        if (bval)
-                        {
-                            m_buttons[i].CheckState = CheckState.Checked;
-                        }
-                        else
-                        {
-                            m_buttons[i].CheckState = CheckState.Unchecked;
-                        }
+                        if (bval) { m_buttons[i].CheckState = CheckState.Checked; }
+
+                        else { m_buttons[i].CheckState = CheckState.Unchecked; }
                     }
                 }
-                else if (mConnType == 1)
-                {
-                    for (int i = 0; i < 32; i++)
-                    {                      
+
+                else if (mConnType == 1) {
+                    for (int i = 0; i < 32; i++) {                      
                         bool bval = HXApi.HXGetBit(HXMap.HX_Y, mSelectedDevice, i);
 
-                        if (bval)
-                        {
-                            m_buttons[i].CheckState = CheckState.Checked;
-                        }
-                        else
-                        {
-                            m_buttons[i].CheckState = CheckState.Unchecked;
-                        }
+                        if (bval) { m_buttons[i].CheckState = CheckState.Checked; }
+                        
+                        else { m_buttons[i].CheckState = CheckState.Unchecked; }
                     }
-
                 }
             }
-
-
         }
 
-        private void cmb_device_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            mSelectedDevice = cmb_device.SelectedIndex;
-        }
+        private void cmb_device_SelectedIndexChanged(object sender, EventArgs e) { mSelectedDevice = cmb_device.SelectedIndex; }
     }
 
 

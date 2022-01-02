@@ -39,7 +39,310 @@
      * HXApi.HXGetString((int)HXMap.HX_STR_OPMSG, BYTE ARRAY);                    
      * (BYTE ARRAY는 메시지를 담을 변수)
 
-     line 33 이후
+     base_Form.cs line 33 이후
      // 2019-12-09
      // 64비트에서는 디자이너폼에서 유저컨트롤이 제대로 로드 안 됨
      // 코드에서 생성해야함
+
+
+
+     /* comment in scr_info.cs 
+
+         * - 주요 기능 -
+         * 축 선택
+         * 축 별 파라메터 값 모니터링 및 값 저장하기
+          
+          
+         - Register 값 가져오기
+         1) HX 20 API
+            * PM맵 값 가져오기
+         * GetPMF(ADDRESS);
+         * (반환 값은 DOUBLE형)
+       
+            * PU맵 값 가져오기 
+         * GetPUF(ADDRESS);
+         * (반환 값은 DOUBLE형임)
+           
+                   
+         2) HX API                
+            * PM맵 값 가져오기
+         * HXApi.HXGetRegister64(HXMap.HX_PM, ADDRESS);
+         * (반환 값은 DOUBLE형)
+         
+            * PU맵 값 가져오기
+         * HXApi.HXGetRegister64(HXMap.HX_PU, ADDRESS);
+         * (반환 값은 DOUBLE형)
+          
+         
+         
+         * - Register 값 저장하기
+         1) HX 20 API          
+            * PM맵 값 저장하기
+         * SetPMF(ADDRESS, DOUBLE VALUE);
+         * (DOUBLE형으로 저장할 값 넣기)
+         
+            * PU맵 값 저장하기
+         * SetPUF(ADDRESS, DOUBLE VALUE);
+         * (DOUBLE형으로 저장할 값 넣기)
+                    
+         
+         2) HX API
+            * PM맵 값 저장하기
+         * HXApi.HXSetRegister64(HXMap.HX_PM, ADDRESS, DOUBLE VALUE);
+         * (DOUBLE형으로 저장할 값 넣기)         
+
+            * PU맵 값 저장하기                         
+          * HXApi.HXSetRegister64(HXMap.HX_PU, ADDRESS, DOUBLE VALUE);
+         * (DOUBLE형으로 저장할 값 넣기)         
+       
+         
+         */
+
+          /* commemt in scr_IO.cs
+
+         * - 주요 기능 -
+         * 비트 모니터링 및 값 저장하기
+         * 
+         * 
+         - 비트 값 넣기
+         1) HX 20 API
+            * X맵에 값을 넣을 경우
+         * SetBit(HxMap.HX_X, ADDRESS, BIT, TRUE OR FALSE);    
+         * (TRUE OR FALSE는 해당 비트 주소와 비트자리에 넣을 값)
+          
+            * Y맵에 값을 넣을 경우
+         * SetBit(HxMap.HX_Y, ADDRESS, BIT, TRUE OR FALSE);     
+          
+          
+          
+         2) HX API
+            * X맵에 값을 넣을 경우
+         * HXApi.HXSetBit(HXMap.HX_X, ADDRESS, BIT, TRUE OR FALSE); 
+         * (TRUE OR FALSE는 해당 비트 주소와 비트자리에 넣을 값)
+          
+            * Y맵에 값을 넣을 경우
+         * HXApi.HXSetBit(HXMap.HX_Y, ADDRESS, BIT, TRUE OF FALSE); 
+          
+          
+        
+                    
+          - 비트 값 가져오기
+         1) HX 20 API
+            * X맵에 값 가져오기   
+         * GetBit(HxMap.HX_X, ADDRESS, BIT);
+         * (반환값은 BOOL형임)
+          
+            * Y맵에 값 가져오기
+         * GetBit(HxMap.HX_Y, ADDRESS, BIT);
+         * (반환값은 BOOL형임)
+          
+         
+          
+          
+         2) HX API
+            * X맵에 값 가져오기
+         * HXApi.HXGetBit(HXMap.HX_X, ADDRESS, BIT); 
+         * (반환값은 BOOL형임)
+          
+            * Y맵에 값 가져오기
+         * HXApi.HXGetBit(HXMap.HX_Y, ADDRESS, BIT); 
+         * (반환값은 BOOL형임)
+          
+            
+         
+         
+         */
+
+          /*
+          MapTest.cs
+
+         * - 주요 기능 -
+         HX MAP에서 쓰는 맵에 값을 모니터링 및 저장하는 기능
+            
+         * GET(저장하기)버튼의 경우
+         * 해당 MAP, ADDRESS, (BIT)에 해당되는 값을 모니터링할 수 있음
+         * (PS맵의 경우 AXIS값을 기입해야함)
+         
+         
+         * SET(저장하기)버튼의 경우
+         * 해당 MAP, ADDRESS, (BIT)에 값을 저장한 후 일정 시간이 지난 후 저장이 제대로 되었나 확인하기 위해
+         * 해당 맵에서 값을 가져와 모니터링할 수 있음
+         * (PS맵의 경우 AXIS값을 기입해야함)
+         
+         */
+
+          /* sec_motion.cs
+
+         * - 주요 기능 -
+         * 좌표 모니터링
+         * MODE 선택
+         * READY, RESET, CYCLE STOP, CYCLE START
+         * JOG 동작
+          
+          
+         - 비트 값 넣기
+         1) HX 20 API
+            * G맵에 값을 넣을 경우
+         * SetGB(ADDRESS, BIT , TRUE OR FALSE);
+         * (TRUE OR FALSE는 해당 비트 주소와 비트자리에 넣을 값)
+         * 
+            * X맵에 값을 넣을 경우
+         * SetXB(ADDRESS, BIT, TRUE OR FALSE);
+          
+          
+         2) HX API
+            * G맵에 값을 넣을 경우
+         * HXApi.HXSetBit(HXMap.HX_G, ADDRESS, BIT, TRUE OR FALSE);
+         * (TRUE OR FALSE는 해당 비트 주소와 비트자리에 넣을 값)
+         * 
+            * X맵에 값을 넣을 경우
+         * HXApi.HXSetBit(HXMap.HX_X, ADDRESS, BIT, TRUE OR FALSE);
+          
+          
+           
+         - Register값 가져오기
+         1) HX 20 API
+            * SV맵 값 가져오기
+         * GetSVF(ADDRESS);
+         * (반환 값은 DOUBLE형임)
+         
+          
+            * SN맵 값 가져오기       
+         * GetSNF(ADDRESS);
+         * (반환 값은 DOUBLE형임)
+         * 
+         2) HX API
+           * SV맵 값 가져오기 
+         * HXApi.HXGetRegister64 (HXMap.HX_SV, ADDRESS);
+         * (반환 값은 DOUBLE형임)
+         
+           * SN맵 값 가져오기 
+         * HXApi.HXGetRegister64(HXMap.HX_SN, ADDRESS);
+         * (반환 값은 DOUBLE형임)
+          
+         
+         */
+          /* nclist.cs
+        
+        - 주요 기능 -
+        NC LIST 가져오기
+        PC LIST 가져오기
+        NC 파일 선택하기
+        NC DOWNLOAD, UPLOAD하기
+
+
+ 스크린 사용 방법
+ 1. NC 파일 리스트 추가
+    (화면이 VISIBLE될때마다 새로 리스트 업데이트함)
+	 
+     * 1) HX 20 API
+        GetNcFileCount();
+         * (INT 형으로 NC 파일 개수를 반환함)
+          
+          
+     * 2) HX API
+          HXApi.HXGetNcFileCount();
+         * (INT 형으로 NC 파일 개수를 반환함)
+
+          
+ 2. NC 파일 이름 가져오기   
+     * 1) HX 20 API  
+        HxGetNcFileStr(INDEX NUMBER);
+         * (INDEX NUMBER에 해당하는 파일명을 STRING 형으로 반환함)
+          
+                   
+     * 2) HX API
+         HXApi.HXGetNcFileStr(INDEX NUMBER);
+         * (INDEX NUMBER에 해당하는 파일명을 STRING 형으로 반환함)
+      
+         
+ 3. SELECT
+	원하는 NC 파일을 클릭 후 SELECT버튼 클릭
+
+	- Main, Sub, ncPath에 입력해야함
+     * 1) HX 20 API          
+      HxSetMainProg(SELECTED NC FILE NAME);
+      HxSetSubProg(SELECTED NC FILE NAME);           
+	(SELECTED NC FILE NAME은 입력하려고 하는 NC파일명임
+	.nc빼고 순수 이름만 입력해야함)       
+          
+     * 2) HX API
+       HXApi.HXSetMainProgram(SELECTED NC FILE NAME);
+       HXApi.HXSetSubProgram(SELECTED NC FILE NAME);         
+	(SELECTED NC FILE NAME은 입력하려고 하는 NC파일명임
+	.nc빼고 순수 이름만 입력해야함)       
+         
+                             
+          
+     - SYSTEM PAHR 가져오기
+      * 1) HX 20 API          
+         m_api_20.HxGetSysPath();
+         * (SYSTEM PATH를 STRING 형으로 반환함)   
+        
+      * 2) HX API         
+         HXApi.HXGetSystemPath();
+         * (SYSTEM PATH를 STRING 형으로 반환함)
+         
+          
+          
+      - 가져온 SYSTEMP PATH에 선택한 NC 파일이 있는 경로를 추가한 뒤
+         NC PATH에 그 경로를 저장함
+     * 1) HX 20 API 
+         m_api_20.HxSetNcPath(PATH);
+         * (PATH 는 선택한 NC 파일이 있는 경로임)
+	     * (PATH는 맨 뒤에 '\\'을 꼭 붙여야함)
+          
+      * 2) HX API  
+         HXApi.HXSetNcPath(PATH); 
+         * (PATH 는 선택한 NC 파일이 있는 경로임) 
+         * (PATH는 맨 뒤에 '\\'을 꼭 붙여야함)
+          
+        
+          
+          
+	4. DOWNLOAD
+	PC에 있는 NC 파일을 HX프로그램 NC폴더로 복사
+    PC LIST에 다운로드 할 NC 파일을 선택 후 다운로드 버튼 클릭
+      * 1) HX 20 API 
+        DownloadFile(NC PC PATH, SELECTED NC FILE);
+    	* (NC PC PATH 은 맨 뒤에 '\\'을 꼭 붙여야함)
+	    * (SELECTED NC FILE 은 .nc가 붙은 파일명)
+          
+          
+      * 2) HX API  
+         HXApi.XHXDownloadFile(ID, NC FILE PATH, SELECTED NC FILE);
+         * (ID는 0임)
+         * (NC PC PATH 은 맨 뒤에 '\\'을 꼭 붙여야함)
+         * (SELECTED NC FILE 은 .nc가 붙은 파일명)
+         
+          
+         
+
+	5. UPLOAD
+    제어기LIST에서 선택한 NC파일을 로컬 PC로 복사
+    제어기 LIST에서 업로드할 NC 파일을 선택 후 업로드 버튼 클릭       
+
+	현재 선택된 nc file명 가져와서 upload 입력해야함
+      * 1) HX 20 API           
+          UploadFile(PC_PATH, SELECTED NC FILE);
+	    * (PC PATH 는 맨 뒤에 '\\'을 꼭 붙여야함)
+	    * (SELECTED NC FILE은 .nc가 붙은 파일명)
+        * (PC_PATH는 업로드할 NC FILE이 저장될 공간, 현재는 PC LIST가 보여주고 있는 주소로 지정되어 있음)
+          
+          
+      * 2) HX API           
+         HXApi.XHXUploadFile(0, PC PATH, SELECTED NC FILE);
+	    * (PC PATH 는 맨 뒤에 '\\'을 꼭 붙여야함)
+	    * (SELECTED NC FILE은 .nc가 붙은 파일명)
+        * (PC_PATH는 업로드할 NC FILE이 저장될 공간, 현재는 PC LIST가 보여주고 있는 주소로 지정되어 있음)
+         
+
+         
+         
+
+ ---------------------------------------------------
+
+
+                   
+         
+         */
